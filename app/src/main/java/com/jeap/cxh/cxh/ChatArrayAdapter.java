@@ -1,24 +1,17 @@
 package com.jeap.cxh.cxh;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ContextThemeWrapper;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jeap.cxh.cxh.model.BtnInfo;
 import com.squareup.picasso.Picasso;
@@ -32,19 +25,26 @@ import static android.content.Context.MODE_PRIVATE;
 public class ChatArrayAdapter extends ArrayAdapter<ChatMessage> {
     private final Context context;
     private final SharedPreferences sharedPrefs;
-	private TextView chatText;
+    private TextView chatText;
     private LinearLayout card, btnLL;
-	private List<ChatMessage> chatMessageList = new ArrayList<ChatMessage>();
-	private LinearLayout singleMessageContainer;
+    private List<ChatMessage> chatMessageList = new ArrayList<ChatMessage>();
+    private LinearLayout singleMessageContainer;
 
 
-	@Override
-	public void add(ChatMessage object) {
-		chatMessageList.add(object);
-		super.add(object);
-	}
+    public ChatArrayAdapter(Context context, int textViewResourceId) {
+        super(context, textViewResourceId);
+        this.context = context;
+        sharedPrefs = context.getSharedPreferences("passInt", 0);
 
-    public void myRemove(int position, int btnId, String btnName){
+    }
+
+    @Override
+    public void add(ChatMessage object) {
+        chatMessageList.add(object);
+        super.add(object);
+    }
+
+    public void myRemove(int position, int btnId, String btnName) {
         SharedPreferences prefs = context.getSharedPreferences("shvar", MODE_PRIVATE);
         SharedPreferences.Editor edit = prefs.edit();
         edit.putInt("passVar", btnId);
@@ -54,27 +54,20 @@ public class ChatArrayAdapter extends ArrayAdapter<ChatMessage> {
         ChatArrayAdapter.super.notifyDataSetChanged();
     }
 
-	public ChatArrayAdapter( Context context, int textViewResourceId) {
-		super(context, textViewResourceId);
-        this.context = context;
-        sharedPrefs = context.getSharedPreferences("passInt", 0);
-
+    public int getCount() {
+        return this.chatMessageList.size();
     }
 
-	public int getCount() {
-		return this.chatMessageList.size();
-	}
+    public ChatMessage getItem(int index) {
+        return this.chatMessageList.get(index);
+    }
 
-	public ChatMessage getItem(int index) {
-		return this.chatMessageList.get(index);
-	}
-
-	public View getView(int position, View convertView, ViewGroup parent) {
-		View row = convertView;
-		if (row == null) {
-			LayoutInflater inflater = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			row = inflater.inflate(R.layout.activity_chat_singlemessage, parent, false);
-		}
+    public View getView(int position, View convertView, ViewGroup parent) {
+        View row = convertView;
+        if (row == null) {
+            LayoutInflater inflater = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            row = inflater.inflate(R.layout.activity_chat_singlemessage, parent, false);
+        }
         ChatMessage chatMessageObj = getItem(position);
         singleMessageContainer = (LinearLayout) row.findViewById(R.id.singleMessageContainer);
 
@@ -122,10 +115,9 @@ public class ChatArrayAdapter extends ArrayAdapter<ChatMessage> {
 
         } else if (chatMessageObj.msgType == 2) {
 
-            if((btnLL).getChildCount() > 0)
-                ( btnLL).removeAllViews();
+            if ((btnLL).getChildCount() > 0) btnLL.removeAllViews();
 
-            int iNumberOfButtons =  chatMessageObj.listObj.size();
+            int iNumberOfButtons = chatMessageObj.listObj.size();
             Button[] dynamicButtons = new Button[iNumberOfButtons];
 
             LinearLayout.LayoutParams paramsButton = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -140,13 +132,10 @@ public class ChatArrayAdapter extends ArrayAdapter<ChatMessage> {
                 dynamicButtons[i].setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Button b = (Button)view;
+                        Button b = (Button) view;
                         String buttonText = b.getText().toString();
                         myRemove(delIdx, view.getId(), buttonText);
 
-                        //Toast.makeText(context,
-                         //       "Request sent",
-                           //     Toast.LENGTH_LONG).show();
                     }
                 });
 
@@ -159,35 +148,21 @@ public class ChatArrayAdapter extends ArrayAdapter<ChatMessage> {
             btnLL.setVisibility(View.VISIBLE);
             card.setVisibility(View.GONE);
 
-        }else if (chatMessageObj.msgType == 3) {
+        } else if (chatMessageObj.msgType == 3) {
 
-            if((btnLL).getChildCount() > 0)
-                ( btnLL).removeAllViews();
+            if ((btnLL).getChildCount() > 0) btnLL.removeAllViews();
 
-            int iNumberOfButtons =  chatMessageObj.listObj.size();
-            Button[] dynamicButtons = new Button[iNumberOfButtons];
-
-            LinearLayout.LayoutParams paramsButton = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            int iNumberOfButtons = chatMessageObj.listObj.size();
             int[] myImageList = new int[]{R.drawable.m1, R.drawable.m2, R.drawable.m3};
             for (int i = 0; i < iNumberOfButtons; i++) {
                 ImageView myImageView = new ImageView(context);
-                //myImageView.setImageResource();
                 final float scale = 3;
-                int dpWidthInPx  = (int) (130 * scale);
+                int dpWidthInPx = (int) (130 * scale);
                 int dpHeightInPx = (int) (180 * scale);
                 Picasso.with(context).load(myImageList[i]).resize(dpWidthInPx, dpHeightInPx).into(myImageView);
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(dpWidthInPx, dpHeightInPx);
                 layoutParams.setMargins(5, 0, 5, 0);
                 myImageView.setLayoutParams(layoutParams);
-                myImageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Log.e("dfas", "äsdf");
-                        Toast.makeText(context,
-                                "You have clicked " + ((TextView) view).getText(),
-                                Toast.LENGTH_LONG).show();
-                    }
-                });
                 btnLL.addView(myImageView);
             }
 
@@ -197,10 +172,8 @@ public class ChatArrayAdapter extends ArrayAdapter<ChatMessage> {
             card.setVisibility(View.GONE);
 
         }
-		return row;
-	}
-
-
+        return row;
+    }
 
 
 }

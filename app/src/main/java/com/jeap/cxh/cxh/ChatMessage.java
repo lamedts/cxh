@@ -6,9 +6,9 @@ import com.jeap.cxh.cxh.model.FlightInfo;
 import java.util.List;
 
 public class ChatMessage {
-	public boolean left;
-	public int msgType;
-	public String message;
+    public boolean left;
+    public int msgType;
+    public String message;
     public FlightInfo flightInfo;
     public List listObj;
 
