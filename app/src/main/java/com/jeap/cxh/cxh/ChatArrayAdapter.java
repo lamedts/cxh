@@ -3,6 +3,7 @@ package com.jeap.cxh.cxh;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ContextThemeWrapper;
@@ -13,9 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jeap.cxh.cxh.model.BtnInfo;
 import com.squareup.picasso.Picasso;
@@ -23,9 +26,12 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
+
 
 public class ChatArrayAdapter extends ArrayAdapter<ChatMessage> {
-    private Context context;
+    private final Context context;
+    private final SharedPreferences sharedPrefs;
 	private TextView chatText;
     private LinearLayout card, btnLL;
 	private List<ChatMessage> chatMessageList = new ArrayList<ChatMessage>();
@@ -38,9 +44,20 @@ public class ChatArrayAdapter extends ArrayAdapter<ChatMessage> {
 		super.add(object);
 	}
 
+    public void myRemove(int position, int btnId, String btnName){
+        SharedPreferences prefs = context.getSharedPreferences("shvar", MODE_PRIVATE);
+        SharedPreferences.Editor edit = prefs.edit();
+        edit.putInt("passVar", btnId);
+        edit.putString("passName", btnName);
+        edit.commit();
+        chatMessageList.remove(position);
+        ChatArrayAdapter.super.notifyDataSetChanged();
+    }
+
 	public ChatArrayAdapter( Context context, int textViewResourceId) {
 		super(context, textViewResourceId);
         this.context = context;
+        sharedPrefs = context.getSharedPreferences("passInt", 0);
 
     }
 
@@ -119,10 +136,17 @@ public class ChatArrayAdapter extends ArrayAdapter<ChatMessage> {
                 dynamicButtons[i].setText(btnItem.getName());
                 dynamicButtons[i].setId(btnItem.getId());
                 dynamicButtons[i].setTextSize(15.0f);
+                final int delIdx = position;
                 dynamicButtons[i].setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        Button b = (Button)view;
+                        String buttonText = b.getText().toString();
+                        myRemove(delIdx, view.getId(), buttonText);
 
+                        //Toast.makeText(context,
+                         //       "Request sent",
+                           //     Toast.LENGTH_LONG).show();
                     }
                 });
 
@@ -158,7 +182,10 @@ public class ChatArrayAdapter extends ArrayAdapter<ChatMessage> {
                 myImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
+                        Log.e("dfas", "äsdf");
+                        Toast.makeText(context,
+                                "You have clicked " + ((TextView) view).getText(),
+                                Toast.LENGTH_LONG).show();
                     }
                 });
                 btnLL.addView(myImageView);

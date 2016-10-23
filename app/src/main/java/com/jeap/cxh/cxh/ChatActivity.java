@@ -2,8 +2,10 @@ package com.jeap.cxh.cxh;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.DataSetObserver;
 import android.net.Uri;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -30,6 +32,8 @@ import com.jeap.cxh.cxh.model.FlightInfo;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
@@ -49,11 +53,12 @@ public class ChatActivity extends AppCompatActivity  {
     public FlightInfo flightInfo;
 
     List<BtnInfo> plList;
+    List<BtnInfo> actList;
     List<BtnInfo> mealList;
     List<BtnInfo> postAct;
     List<BtnInfo> reqItem;
     int stateIdx = 0;
-
+    Intent i;
     private boolean side = false;
 
 
@@ -126,21 +131,35 @@ public class ChatActivity extends AppCompatActivity  {
             public void onChanged() {
                 super.onChanged();
                 listView.setSelection(chatArrayAdapter.getCount() - 1);
+
+                SharedPreferences prefs = getSharedPreferences("shvar", MODE_PRIVATE);
+
+                Log.d("dfa", "sadf" + prefs.getString("passName", null));
+                int btnId = prefs.getInt("passVar", 0);
+                if(btnId > 0){
+                    chatText.setText(prefs.getString("passName", null));
+                    //sendChatMessage(prefs.getString("passName", null));
+                    SharedPreferences.Editor edit = prefs.edit();
+                    edit.putInt("passVar", 0);
+                    edit.commit();
+                }
             }
         });
 
 
 
         flightInfo.setInfo();
+        actList = new ArrayList<>();
+        actList.add(new BtnInfo("meal", "Edit PlayList", 10));
+        actList.add(new BtnInfo("meal", "Choose Meal", 11));
         mealList = new ArrayList<>();
-        mealList.add(new BtnInfo("meal", "Edit PlayList", 10));
-        mealList.add(new BtnInfo("meal", "Choose Meal", 11));
+        mealList.add(new BtnInfo("meal", "Chicken", 10));
+        mealList.add(new BtnInfo("meal", "Beef", 11));
         plList = new ArrayList<>();
         plList.add(new BtnInfo("pl", "m1", 20));
         plList.add(new BtnInfo("pl", "m2", 21));
         plList.add(new BtnInfo("pl", "m3", 22));
         postAct = new ArrayList<>();
-        postAct.add(new BtnInfo("postact", "Feedback", 41));
         postAct.add(new BtnInfo("postact", "Check Luggage", 42));
         reqItem = new ArrayList<>();
         reqItem.add(new BtnInfo("item", "Blanket", 31));
@@ -149,22 +168,22 @@ public class ChatActivity extends AppCompatActivity  {
         reqItem.add(new BtnInfo("item", "Nuts", 32));
 
 
-        Intent i= getIntent();
+        i= getIntent();
         stateIdx = i.getIntExtra("state", 0);
 
         if(stateIdx == 0) {
             chatArrayAdapter.add(new ChatMessage(true, 0, "Hello!"));
             chatArrayAdapter.add(new ChatMessage(true, 1, flightInfo));
-            chatArrayAdapter.add(new ChatMessage(true, 0, "Choose Meal or Edit Playlist"));
+            //chatArrayAdapter.add(new ChatMessage(true, 0, "Choose Meal or Edit Playlist"));
+            chatArrayAdapter.add(new ChatMessage(true, 2, actList));
         }else if(stateIdx == 1) {
-            chatArrayAdapter.add(new ChatMessage(true, 0, "Welcome Aboard "));
-            chatArrayAdapter.add(new ChatMessage(true, 0, "How can I help you"));
+            chatArrayAdapter.add(new ChatMessage(true, 0, "Welcome aboard! "));
+            chatArrayAdapter.add(new ChatMessage(true, 0, "What do you need?"));
             chatArrayAdapter.add(new ChatMessage(true, 2, reqItem));
         }else if(stateIdx == 2) {
+            chatArrayAdapter.add(new ChatMessage(true, 0, "Thank you for flying with Cathay Pacific. We hope you enjoyed the journey."));
             chatArrayAdapter.add(new ChatMessage(true, 2, postAct));
         }
-
-
 
     }
 
@@ -176,16 +195,61 @@ public class ChatActivity extends AppCompatActivity  {
         //side = !side;
         if(msg.equalsIgnoreCase("choose meal")) {
             chatArrayAdapter.add(new ChatMessage(true, 0, "We have Chicken and Beef, which one do you want?"));
+            chatArrayAdapter.add(new ChatMessage(true, 2, mealList));
         }else if (msg.equalsIgnoreCase("edit playlist")) {
             chatArrayAdapter.add(new ChatMessage(true, 0, "Here is the Movies"));
             chatArrayAdapter.add(new ChatMessage(true, 3, plList));
-        }else {
-            chatArrayAdapter.add(new ChatMessage(true, 0, "OK"));
+        }else if (msg.equalsIgnoreCase("Check luggage")) {
+            chatArrayAdapter.add(new ChatMessage(true, 0, "Luggage just delivered to Claim Area 1 at 10:18PM    "));
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    chatArrayAdapter.add(new ChatMessage(true, 0, "Please proceed to pick them up. :)"));
+                }
+            }, 500);
+
+        }else if (stateIdx == 1){
+            chatArrayAdapter.add(new ChatMessage(true, 0, "Request sent "));
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    chatArrayAdapter.add(new ChatMessage(true, 0, "It will be delivered in 15 mins"));
+                }
+            }, 500);
+
+        }else if (stateIdx == 0){
+            chatArrayAdapter.add(new ChatMessage(true, 0, "Thank you, we will prepare it for you."));
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    chatArrayAdapter.add(new ChatMessage(true, 0, "Do you want to edit playlist"));
+                    chatArrayAdapter.add(new ChatMessage(true, 2, actList));
+                }
+            }, 500);
         }
 
         return true;
     }
 
 
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter adapter;
+    private RecyclerView.LayoutManager layoutManager;
+    private ArrayList<String> planetList=new ArrayList();
+    //Other Stuff
+/*
+    protected void onCreate(Bundle savedInstanceState) {
+        //Other Stuff and initialize planetList with all the planets name before passing it to adapter
 
+        recyclerView= (RecyclerView) findViewById(R.id.recycler_view);
+        layoutManager=new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
+        adapter = new PlanetAdapter(planetList, getApplicationContext());
+        recyclerView.setAdapter(adapter);
+    }
+*/
 }
