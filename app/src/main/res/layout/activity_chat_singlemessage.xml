@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/singleMessageContainer"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/singleMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="10dip"
+            android:background="@drawable/balloon_incoming_normal"
+            android:paddingLeft="20dip"
+            android:text="Hello bubbles!"
+            android:textColor="@android:color/primary_text_light"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/cardTV"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
+            android:orientation="vertical"
+            android:background="@drawable/layer_card_background"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_weight=".4"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:padding="15dp"
+                    android:textColor="@color/colorAccent"
+                    android:background="@drawable/round_top"
+                    android:text="Flight Information"
+                    android:textAllCaps="true" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/depaTV"
+                    android:layout_weight=".4"
+                    android:layout_width="0dip"
+                    android:layout_height="150dip"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:textSize="40dp"
+                    android:textAllCaps="true"
+                    android:text="Dest" />
+
+                <TextView
+                    android:id="@+id/TO"
+                    android:layout_weight=".2"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:padding="15dp"
+                    android:textAllCaps="true"
+                    android:text="TO" />
+
+                <TextView
+                    android:id="@+id/destTV"
+                    android:layout_weight=".4"
+                    android:layout_width="0dip"
+                    android:layout_height="150dip"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:textSize="40dp"
+                    android:textAllCaps="true"
+                    android:text="Depa" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp">
+
+                <TextView
+                    android:layout_weight=".25"
+                    android:layout_width="0dip"
+                    android:textSize="12dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="left"
+                    android:text="Gate" />
+
+                <TextView
+                    android:layout_weight=".25"
+                    android:layout_width="0dip"
+                    android:textSize="12dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:text="Seat" />
+
+                <TextView
+                    android:layout_weight=".25"
+                    android:layout_width="0dip"
+                    android:textSize="12dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:text="Departs" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp">
+
+                <TextView
+                    android:id="@+id/gateTV"
+                    android:layout_weight=".25"
+                    android:textStyle="bold"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:textAllCaps="true"
+                    android:text="Dest" />
+
+                <TextView
+                    android:id="@+id/seatTV"
+                    android:textStyle="bold"
+                    android:layout_weight=".25"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:textAllCaps="true"
+                    android:text="Dest" />
+
+                <TextView
+                    android:id="@+id/timeTV"
+                    android:layout_weight=".25"
+                    android:layout_width="0dip"
+                    android:textStyle="bold"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textAllCaps="true"
+                    android:padding="5dp"
+                    android:text="Dest" />
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/listBTN"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/imgBtn"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+
+</LinearLayout>
